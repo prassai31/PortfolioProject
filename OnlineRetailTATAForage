@@ -1,0 +1,74 @@
+Online Retail Data Exploration
+
+SELECT *
+FROM PortfolioProject1..OnlineRetail
+	
+	--Total Number of Customers--
+	
+SELECT COUNT(DISTINCT CustomerID)
+FROM PortfolioProject1..OnlineRetail
+
+	--Total Quantity of the Products Sold--
+	
+SELECT SUM(Quantity)
+FROM  PortfolioProject1..OnlineRetail
+
+	--Revenue--
+
+SELECT Quantity, UnitPrice, (Quantity * UnitPrice) AS Revenue
+FROM PortfolioProject1..OnlineRetail
+
+SELECT ROUND(SUM((Quantity * UnitPrice)),2) AS TotalRevenue
+FROM PortfolioProject1..OnlineRetail
+
+	--Country VS Quantity--
+
+SELECT Country, SUM(Quantity) AS TotalQuantity
+FROM PortfolioProject1..OnlineRetail
+GROUP BY Country
+ORDER BY Country 
+
+	--Revenue by Month--
+
+SELECT MONTH(InvoiceDate) AS Month,ROUND(SUM((Quantity * UnitPrice)),2) AS Revenue
+FROM PortfolioProject1..OnlineRetail
+GROUP BY MONTH(InvoiceDate)
+ORDER BY MONTH(InvoiceDate)
+
+	--Top 5 Months by Revenue--
+
+SELECT TOP 5 MONTH(InvoiceDate) AS Month, ROUND(SUM((Quantity * UnitPrice)),2) AS Revenue
+FROM PortfolioProject1..OnlineRetail
+GROUP BY MONTH(InvoiceDate)
+ORDER BY Revenue DESC
+
+--Month with the Lowest Revenue--
+
+SELECT TOP 1 MONTH(InvoiceDate) AS Month, ROUND(SUM((Quantity * UnitPrice)),2) AS Revenue
+FROM PortfolioProject1..OnlineRetail
+GROUP BY MONTH(InvoiceDate)
+ORDER BY Revenue 
+
+	--Top Sold Products--
+
+SELECT TOP 10 Description, SUM(Quantity) AS TotalQuan, ROUND(SUM((Quantity * UnitPrice)),2) AS Revenue
+FROM PortfolioProject1..OnlineRetail
+GROUP BY Description
+ORDER BY TotalQuan DESC
+
+	--Percentage difference in Revenue from Jan to Dec--
+
+SELECT
+    ((AVG(CASE WHEN MONTH(InvoiceDate) = 12 THEN Quantity * Unitprice END) 
+	- AVG(CASE WHEN MONTH(InvoiceDate) = 1 THEN Quantity * Unitprice END)) 
+	/ AVG(CASE WHEN MONTH(InvoiceDate) = 1 THEN Quantity * Unitprice END))
+	* 100 AS PercentageDifference
+FROM PortfolioProject1..OnlineRetail
+WHERE MONTH(InvoiceDate) IN (1, 12);
+
+
+
+
+
+
+
